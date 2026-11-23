@@ -1,3 +1,7 @@
+(() => {
+  if (window.__ENGLISH_COMPANION_INITIALIZED__) return;
+  window.__ENGLISH_COMPANION_INITIALIZED__ = true;
+
 const ACTIVITIES = [
   {name:"Listening practice", minutes:30, hint:"Écouter, repérer, réécouter"},
   {name:"Speaking practice", minutes:25, hint:"Parler à voix haute et s’enregistrer"},
@@ -238,3 +242,5 @@ window.addEventListener("online",()=>{if(session)syncProgress();else setSyncStat
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&session)syncProgress();});
 window.addEventListener("error",(event)=>{console.error("Application error",event.error||event.message);const status=$("#sync-status");if(status)status.textContent="Une erreur JavaScript empêche certaines fonctions. Rechargez la page après mise à jour.";});
 save();renderTasks();renderTimer();loadCloudSession();
+
+})();
