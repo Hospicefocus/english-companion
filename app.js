@@ -6,7 +6,7 @@ const ACTIVITIES = [
   {name:"Vocabulary & grammar", minutes:15, hint:"Réviser et réutiliser"}
 ];
 const $ = (s) => document.querySelector(s);
-const todayKey = () => new Date().toLocaleDateString("en-CA");
+const todayKey = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
 const safeRead = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
 const CONFIG = window.ENGLISH_COMPANION_CONFIG || {};
 const SUPABASE_URL = CONFIG.supabaseUrl || "";
@@ -21,7 +21,12 @@ function readProgress() {
   const oldDone = safeRead("ec-done-" + todayKey(), []);
   const daily = {};
   if (oldDone.length) daily[todayKey()] = oldDone;
-  return {daily, legacy:{minutes:Number(oldStats.minutes)||0,activities:Number(oldStats.activities)||0,days:Array.isArray(oldStats.days)?oldStats.days:[]}};
+  const migratedMinutes = oldDone.reduce((sum,index)=>sum+(ACTIVITIES[index]?.minutes||0),0);
+  return {daily, legacy:{
+    minutes:Math.max(0,(Number(oldStats.minutes)||0)-migratedMinutes),
+    activities:Math.max(0,(Number(oldStats.activities)||0)-oldDone.length),
+    days:(Array.isArray(oldStats.days)?oldStats.days:[]).filter(day=>!oldDone.length||day!==todayKey())
+  }};
 }
 let progress = readProgress();
 progress.legacy = progress.legacy || {minutes:0,activities:0,days:[]};
@@ -139,9 +144,17 @@ async function syncProgress() {
       if(error) throw error;
     }
     const legacy=progress.legacy;
-    if ((legacy.minutes||legacy.activities||(legacy.days||[]).length)>0) {
+    const existingLegacy=await supabase.from("english_legacy_progress").select("minutes,activities,days").eq("user_id",session.user.id).maybeSingle();
+    if(existingLegacy.error) throw existingLegacy.error;
+    const cloudLegacy=existingLegacy.data||{minutes:0,activities:0,days:[]};
+    const mergedLegacy={
+      minutes:Math.max(legacy.minutes||0,cloudLegacy.minutes||0),
+      activities:Math.max(legacy.activities||0,cloudLegacy.activities||0),
+      days:[...new Set([...(legacy.days||[]),...(cloudLegacy.days||[])])]
+    };
+    if (mergedLegacy.minutes||mergedLegacy.activities||mergedLegacy.days.length) {
       const {error}=await supabase.from("english_legacy_progress").upsert({
-        user_id:session.user.id,minutes:legacy.minutes||0,activities:legacy.activities||0,days:legacy.days||[]
+        user_id:session.user.id,...mergedLegacy
       },{onConflict:"user_id"});
       if(error) throw error;
     }
