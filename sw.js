@@ -20,7 +20,7 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   const sameOrigin = url.origin === self.location.origin;
-  const isAppAsset = sameOrigin && /\\.(html|js|css|webmanifest)$/.test(url.pathname);
+  const isAppAsset = sameOrigin && /\.(html|js|css|webmanifest)$/.test(url.pathname);
   if (isAppAsset || event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request).then(response => {
