@@ -147,6 +147,14 @@ async function syncProgress() {
       );
       if(error) throw error;
     }
+    const lessonRows=allLessonRecords();
+    if(lessonRows.length){
+      const {error}=await supabase.from("english_lesson_progress").upsert(
+        lessonRows.map(row=>({...row,user_id:session.user.id})),
+        {onConflict:"user_id,study_date"}
+      );
+      if(error) throw error;
+    }
     const legacy=progress.legacy;
     const existingLegacy=await supabase.from("english_legacy_progress").select("minutes,activities,days").eq("user_id",session.user.id).maybeSingle();
     if(existingLegacy.error) throw existingLegacy.error;
@@ -162,12 +170,24 @@ async function syncProgress() {
       },{onConflict:"user_id"});
       if(error) throw error;
     }
-    const [cloudRows,legacyRow]=await Promise.all([
+    const [cloudRows,legacyRow,cloudLessons]=await Promise.all([
       supabase.from("english_completions").select("study_date,activity_index").eq("user_id",session.user.id),
-      supabase.from("english_legacy_progress").select("minutes,activities,days").eq("user_id",session.user.id).maybeSingle()
+      supabase.from("english_legacy_progress").select("minutes,activities,days").eq("user_id",session.user.id).maybeSingle(),
+      supabase.from("english_lesson_progress").select("study_date,done,answers").eq("user_id",session.user.id)
     ]);
     if(cloudRows.error) throw cloudRows.error;
     if(legacyRow.error) throw legacyRow.error;
+    if(cloudLessons.error) throw cloudLessons.error;
+    for(const row of cloudLessons.data||[]){
+      const key="ec-lesson-"+row.study_date;
+      const local=safeRead(key,{done:[],answers:{}});
+      const merged={done:[...new Set([...(local.done||[]),...(row.done||[])])],answers:{...(row.answers||{}),...(local.answers||{})}};
+      localStorage.setItem(key,JSON.stringify(merged));
+      if(row.study_date===lessonDate){
+        lessonState=merged;
+      }
+    }
+
     for(const row of cloudRows.data||[]) {
       const day=row.study_date;
       const list=progress.daily[day]||[];
@@ -180,7 +200,7 @@ async function syncProgress() {
         days:[...new Set([...(progress.legacy.days||[]),...(legacyRow.data.days||[])])]
       };
     }
-    save(); renderTasks(); setSyncStatus("Synchronisé · "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}),"success");
+    save(); renderTasks(); renderLesson(); setSyncStatus("Synchronisé · "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}),"success");
   } catch(error) {
     console.error("Sync error",error);
     setSyncStatus("Échec de synchronisation : "+(error.message||"vérifiez la configuration SQL et votre connexion."),"error");
@@ -234,6 +254,17 @@ let lessonState = safeRead(lessonStoreKey,{done:[],answers:{}});
 if(!Array.isArray(lessonState.done)) lessonState.done=[];
 if(!lessonState.answers) lessonState.answers={};
 function saveLessonState(){localStorage.setItem(lessonStoreKey,JSON.stringify(lessonState));}
+function allLessonRecords(){
+  const rows=[];
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(!key||!key.startsWith("ec-lesson-"))continue;
+    const date=key.slice("ec-lesson-".length);
+    const value=safeRead(key,{done:[],answers:{}});
+    rows.push({study_date:date,done:value.done||[],answers:value.answers||{}});
+  }
+  return rows;
+}
 function renderLesson(){
   $("#lesson-day").textContent=lessonDay===6?"WEEKLY REVIEW":"DAY "+(lessonDay+1)+" / 6";
   $("#lesson-subtitle").textContent=lessonDay===6?"Consolide tes acquis et prépare la semaine suivante.":"Une séance guidée de 2 heures · Niveau B1 avec renforcement A1/A2.";
