@@ -32,3 +32,24 @@ No paid plan is required for this public static site.
 ## Privacy
 
 No analytics or external application backend is included. Activity data stays in this browser's local storage.
+
+## Cross-device synchronization (optional free setup)
+
+The app keeps working locally if cloud sync is not configured. To sync progress between your computer and phone, configure Supabase Free:
+
+1. Create a Supabase project on the Free plan at https://supabase.com/dashboard. Supabase Free currently includes 500 MB database and 50,000 monthly active users; free projects can pause after one week of inactivity. See https://supabase.com/pricing.
+2. In Supabase, open **SQL Editor**, paste and run the contents of `supabase-schema.sql`.
+3. In **Project Settings → API**, copy the Project URL and the publishable (or legacy anon) key.
+4. Open `config.js` in this repository and set `supabaseUrl` and `supabaseAnonKey`. These are public browser values; never use the `service_role` or secret key.
+5. Deploy the updated commit. Open the app on each device and sign in with the same email and password.
+
+The database uses Row Level Security. Each account can read, insert, and delete only its own progress rows. Completed activities are stored as individual records, so a new device merges its progress with cloud progress instead of replacing the other device's history. The old local statistics are migrated on first sign-in.
+
+Email confirmation may be required before the first sign-in, depending on the Supabase Auth settings.
+
+### Privacy and limitations
+
+- Do not share your account password. Use the same account only on your own devices.
+- The publishable/anon key is intended to be public; the Supabase secret/service-role key must never be placed in browser code.
+- If the Supabase Free project pauses due to inactivity, cloud sync will resume after the project is restored. Local progress remains available in each browser.
+- Sync runs after a completed activity, on sign-in, when the user presses **Synchroniser**, and when returning to the app. It is not a live keystroke/realtime sync.
