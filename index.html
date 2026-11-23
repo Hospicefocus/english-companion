@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101713">
+  <meta name="description" content="Votre espace personnel pour progresser en anglais, 2 heures par jour.">
+  <title>English Companion — Your daily English practice</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="English Companion accueil">
+        <span class="brand-mark">ec<span>.</span></span>
+        <span class="brand-name">english<span>companion</span></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav">
+        <a class="nav-link active" href="#dashboard"><span>◫</span> Mon espace</a>
+        <a class="nav-link" href="#routine"><span>▤</span> Programme</a>
+        <a class="nav-link" href="#progress"><span>↗</span> Progression</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="offline-pill"><i></i> Disponible hors ligne</div>
+        <p>Small steps.<br><strong>Real fluency.</strong></p>
+        <span class="side-version">PERSONAL LEARNING SPACE · 1.0</span>
+      </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+      <header class="topbar">
+        <div><span class="eyebrow">MON ESPACE D’APPRENTISSAGE</span><h1>Good to see you<span class="green">.</span></h1></div>
+        <div class="top-date" id="today-label"></div>
+      </header>
+
+      <section class="welcome-grid">
+        <div class="welcome-copy">
+          <span class="tag">YOUR ENGLISH JOURNEY</span>
+          <h2>Build your English.<br><em>One day at a time.</em></h2>
+          <p>Deux heures de pratique ciblée pour gagner en aisance, en compréhension et en confiance.</p>
+          <a class="text-link" href="#routine">Voir mon programme <span>↗</span></a>
+        </div>
+        <div class="level-card">
+          <div class="level-top"><span>YOUR CURRENT LEVEL</span><span class="level-dot">●</span></div>
+          <div class="level-number">B1</div>
+          <div class="level-name">Intermediate</div>
+          <div class="level-rule"><span></span></div>
+          <div class="level-foot"><span>EF SET · 21 NOV 2026</span><span>41 / 100</span></div>
+          <p class="level-note">Reading B2 · Listening A1 · Writing A2 · Speaking B1</p>
+        </div>
+      </section>
+
+      <section class="section-heading" id="routine">
+        <div><span class="eyebrow">TODAY’S PLAN</span><h2>Your 2-hour routine</h2></div>
+        <div class="date-chip" id="session-status">NOT STARTED</div>
+      </section>
+
+      <section class="workspace-grid">
+        <div class="routine-panel">
+          <div class="routine-summary"><div><strong>120</strong><span>minutes planned</span></div><div class="summary-right"><strong id="done-count">0/5</strong><span>activities done</span></div></div>
+          <div class="progress-track"><span id="daily-progress"></span></div>
+          <div class="task-list" id="task-list">
+            <button class="task active" data-task="0"><span class="task-icon">耳</span><span class="task-info"><b>Listening</b><small>Comprendre l’anglais parlé</small></span><span class="task-time">30 min</span><span class="task-check">○</span></button>
+            <button class="task" data-task="1"><span class="task-icon">◉</span><span class="task-info"><b>Speaking</b><small>Parler avec fluidité</small></span><span class="task-time">25 min</span><span class="task-check">○</span></button>
+            <button class="task" data-task="2"><span class="task-icon">▤</span><span class="task-info"><b>Reading</b><small>Lire et comprendre</small></span><span class="task-time">25 min</span><span class="task-check">○</span></button>
+            <button class="task" data-task="3"><span class="task-icon">✎</span><span class="task-info"><b>Writing</b><small>Écrire clairement</small></span><span class="task-time">25 min</span><span class="task-check">○</span></button>
+            <button class="task" data-task="4"><span class="task-icon">Aa</span><span class="task-info"><b>Vocabulary & grammar</b><small>Consolider les fondamentaux</small></span><span class="task-time">15 min</span><span class="task-check">○</span></button>
+          </div>
+          <div class="routine-foot"><span>✦ 6 days / week</span><span>Rest & review on day 7</span></div>
+        </div>
+
+        <aside class="timer-panel">
+          <div class="timer-head"><span class="eyebrow">FOCUS TIMER</span><span class="live-indicator"><i></i> FOCUS MODE</span></div>
+          <div class="timer-task" id="timer-task">Listening practice</div>
+          <div class="timer-ring" id="timer-ring">
+            <div class="timer-inner"><span id="timer-display">30:00</span><small>TIME REMAINING</small></div>
+          </div>
+          <div class="timer-controls">
+            <button class="btn-primary" id="start-btn">Start session <span>→</span></button>
+            <div class="secondary-controls"><button id="reset-btn" class="btn-secondary">↺ Reset</button><button id="skip-btn" class="btn-secondary">Next activity ↗</button></div>
+          </div>
+          <div class="timer-note" id="timer-note">Choisissez une activité puis lancez votre session.</div>
+        </aside>
+      </section>
+
+      <section class="bottom-grid" id="progress">
+        <div class="tip-card"><div class="tip-symbol">✳</div><div><span class="eyebrow">TODAY’S REMINDER</span><h3>Consistency beats intensity.</h3><p>Ne cherchez pas à tout maîtriser aujourd’hui. Répétez, pratiquez, puis recommencez demain.</p></div></div>
+        <div class="stats-card"><span class="eyebrow">YOUR LEARNING LOG</span><div class="stats-row"><div><strong id="total-minutes">0</strong><small>Minutes completed</small></div><div><strong id="streak-days">0</strong><small>Active days</small></div><div><strong id="total-sessions">0</strong><small>Activities done</small></div></div><button class="reset-data" id="clear-data">Reset my statistics</button></div>
+      </section>
+      <footer>MADE FOR YOUR PROGRESS <span>·</span> ENGLISH COMPANION 2026</footer>
+    </main>
+  </div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
