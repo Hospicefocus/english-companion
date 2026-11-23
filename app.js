@@ -337,6 +337,36 @@ $("#clear-data").addEventListener("click",async()=>{
   progress={daily:{},legacy:{minutes:0,activities:0,days:[]}};save();renderTasks();selectActivity(0);
   if(session)setSyncStatus("Progression réinitialisée sur le cloud et cet appareil.","success");
 });
+function showPage(page){
+  const allowed=["dashboard","programme","lesson","progress"];
+  const target=allowed.includes(page)?page:"dashboard";
+  document.querySelectorAll("[data-page]").forEach(section=>{
+    section.classList.toggle("view-hidden",section.dataset.page!==target);
+  });
+  document.querySelectorAll("[data-page-link]").forEach(link=>{
+    const active=link.dataset.pageLink===target;
+    link.classList.toggle("active",active);
+    if(active)link.setAttribute("aria-current","page");else link.removeAttribute("aria-current");
+  });
+  const headings={
+    dashboard:["MON ESPACE D’APPRENTISSAGE","Good to see you."],
+    programme:["TON ORGANISATION","Your 2-hour routine"],
+    lesson:["LEÇON DU JOUR","Today's lesson."],
+    progress:["TON BILAN","Your progress."]
+  };
+  $(".topbar .eyebrow").textContent=headings[target][0];
+  $(".topbar h1").textContent=headings[target][1];
+  history.replaceState(null,"","#"+({dashboard:"dashboard",programme:"routine",lesson:"daily-lesson",progress:"progress"}[target]));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("[data-page-link]").forEach(link=>link.addEventListener("click",event=>{
+  event.preventDefault();showPage(link.dataset.pageLink);
+}));
+document.querySelectorAll("[data-go-page]").forEach(link=>link.addEventListener("click",event=>{
+  event.preventDefault();showPage(link.dataset.goPage);
+}));
+showPage(location.hash==="#routine"?"programme":location.hash==="#daily-lesson"?"lesson":location.hash==="#progress"?"progress":"dashboard");
+
 $("#today-label").textContent=new Intl.DateTimeFormat("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 if("Notification"in window&&Notification.permission==="default")$("#start-btn").addEventListener("click",()=>{if(Notification.permission==="default")Notification.requestPermission().catch(()=>{});},{once:true});
