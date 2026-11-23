@@ -1,5 +1,5 @@
-const CACHE = "english-companion-v1";
-const ASSETS = ["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./icon.svg"];
+const CACHE = "english-companion-v2";
+const ASSETS = ["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./icon.svg","./config.js"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
   self.skipWaiting();
