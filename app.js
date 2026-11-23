@@ -234,4 +234,7 @@ $("#today-label").textContent=new Intl.DateTimeFormat("fr-FR",{weekday:"long",da
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 if("Notification"in window&&Notification.permission==="default")$("#start-btn").addEventListener("click",()=>{if(Notification.permission==="default")Notification.requestPermission().catch(()=>{});},{once:true});
 window.addEventListener("focus",()=>{if(session)syncProgress();});
+window.addEventListener("online",()=>{if(session)syncProgress();else setSyncStatus("Connexion rétablie · vos données locales sont disponibles.","success");});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&session)syncProgress();});
+window.addEventListener("error",(event)=>{console.error("Application error",event.error||event.message);const status=$("#sync-status");if(status)status.textContent="Une erreur JavaScript empêche certaines fonctions. Rechargez la page après mise à jour.";});
 save();renderTasks();renderTimer();loadCloudSession();
