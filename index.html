@@ -36,6 +36,15 @@
         <div class="top-date" id="today-label"></div>
       </header>
 
+      <section class="sync-panel" id="account-panel">
+        <div class="sync-copy"><span class="eyebrow">CLOUD SYNC</span><strong>Retrouvez votre progression sur tous vos appareils.</strong><small id="sync-status">Mode local — connectez votre compte pour activer la synchronisation.</small></div>
+        <div class="auth-controls" id="auth-controls">
+          <input id="auth-email" type="email" autocomplete="email" placeholder="Votre adresse e-mail" aria-label="Adresse e-mail">
+          <input id="auth-password" type="password" autocomplete="current-password" placeholder="Mot de passe" aria-label="Mot de passe">
+          <div class="auth-buttons"><button id="sign-in-btn" class="auth-primary">Se connecter</button><button id="sign-up-btn" class="auth-secondary">Créer un compte</button></div>
+        </div>
+        <div class="signed-controls" id="signed-controls" hidden><span id="signed-email"></span><button id="sync-now-btn" class="auth-secondary">Synchroniser ↻</button><button id="sign-out-btn" class="auth-secondary">Déconnexion</button></div>
+      </section>
       <section class="welcome-grid">
         <div class="welcome-copy">
           <span class="tag">YOUR ENGLISH JOURNEY</span>
@@ -93,6 +102,8 @@
       <footer>MADE FOR YOUR PROGRESS <span>·</span> ENGLISH COMPANION 2026</footer>
     </main>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
   <script src="./app.js" defer></script>
 </body>
 </html>
