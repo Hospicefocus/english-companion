@@ -53,3 +53,10 @@ Email confirmation may be required before the first sign-in, depending on the Su
 - The publishable/anon key is intended to be public; the Supabase secret/service-role key must never be placed in browser code.
 - If the Supabase Free project pauses due to inactivity, cloud sync will resume after the project is restored. Local progress remains available in each browser.
 - Sync runs after a completed activity, on sign-in, when the user presses **Synchroniser**, and when returning to the app. It is not a live keystroke/realtime sync.
+
+
+## Daily guided lessons
+
+The dashboard includes a six-day guided lesson cycle plus a weekly review. Each day contains a listening script with browser text-to-speech, a speaking prompt, a reading passage and comprehension question, a writing task, vocabulary, and a grammar exercise. The weekly themes progress from introductions and routines to work, opinions, problem-solving, and future plans.
+
+Daily written answers and exercise completion are saved locally. When Supabase is configured and the learner is signed in, daily lesson completion and answers are also synchronized to the learner's private account. Browser text-to-speech uses the voice available on the device; it is not a human-recorded audio lesson.
