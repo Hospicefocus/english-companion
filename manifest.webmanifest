@@ -1,0 +1,13 @@
+{
+  "name": "English Companion",
+  "short_name": "English Companion",
+  "description": "Votre espace personnel pour progresser en anglais.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8f5",
+  "theme_color": "#101713",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
