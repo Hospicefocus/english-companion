@@ -304,7 +304,7 @@ $("#listen-transcript").addEventListener("click",()=>{
 document.querySelectorAll("[data-lesson-done]").forEach(button=>button.addEventListener("click",()=>{
   const id=Number(button.dataset.lessonDone);
   lessonState.done=lessonState.done.includes(id)?lessonState.done.filter(x=>x!==id):[...lessonState.done,id];
-  saveLessonState();renderLesson();
+  saveLessonState();renderLesson();if(session)syncProgress();
 }));
 ["listen-answer","reading-answer","writing-answer"].forEach(id=>$("#"+id).addEventListener("input",event=>{
   const key=id==="listen-answer"?"listen":id==="reading-answer"?"reading":"writing";
