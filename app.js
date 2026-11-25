@@ -311,7 +311,8 @@ document.querySelectorAll("[data-lesson-done]").forEach(button=>button.addEventL
   lessonState.answers[key]=event.target.value;saveLessonState();
   if(key==="writing")$("#writing-count").textContent=(event.target.value.trim().match(/\S+/g)||[]).length+" words";
 }));
-$("#grammar-answer").addEventListener("change",event=>{
+$("#grammar-exercise").addEventListener("change",event=>{
+  if(!event.target||event.target.id!=="grammar-answer")return;
   const feedback=$("#grammar-feedback");
   if(event.target.value==="")feedback.textContent="";
   else feedback.textContent=Number(event.target.value)===lesson.correct?"Correct! Well done.":"Not quite. Try again, then review the explanation above.";
