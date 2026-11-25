@@ -3,10 +3,10 @@
   window.__ENGLISH_COMPANION_INITIALIZED__ = true;
 
 const ACTIVITIES = [
-  {name:"Listening practice", minutes:30, hint:"Écouter, repérer, réécouter"},
+  {name:"Listening practice", minutes:40, hint:"Écouter, repérer, réécouter"},
   {name:"Speaking practice", minutes:25, hint:"Parler à voix haute et s’enregistrer"},
-  {name:"Reading practice", minutes:25, hint:"Lire, comprendre, résumer"},
-  {name:"Writing practice", minutes:25, hint:"Écrire puis corriger"},
+  {name:"Reading practice", minutes:10, hint:"Lire, comprendre, résumer"},
+  {name:"Writing practice", minutes:30, hint:"Écrire puis corriger"},
   {name:"Vocabulary & grammar", minutes:15, hint:"Réviser et réutiliser"}
 ];
 const $ = (s) => document.querySelector(s);
@@ -64,7 +64,18 @@ function save() {
   const stats = completionStats();
   localStorage.setItem("ec-stats", JSON.stringify({minutes:stats.minutes,activities:stats.activities,days:[...new Set([...Object.keys(progress.daily),...(progress.legacy.days||[])])]}));
 }
+function syncDurations() {
+  document.querySelectorAll(".task").forEach((el, i) => {
+    const t = el.querySelector(".task-time");
+    if (t && ACTIVITIES[i]) t.textContent = ACTIVITIES[i].minutes + " min";
+  });
+  const names = ["LISTENING","SPEAKING","READING","WRITING","VOCABULARY & GRAMMAR"];
+  document.querySelectorAll(".lesson-card-head .eyebrow").forEach((el, i) => {
+    if (ACTIVITIES[i] && / MIN$/.test(el.textContent)) el.textContent = names[i] + " · " + ACTIVITIES[i].minutes + " MIN";
+  });
+}
 function renderTasks() {
+  syncDurations();
   const done = todayDone();
   document.querySelectorAll(".task").forEach((el, i) => {
     el.classList.toggle("active", i === current);
